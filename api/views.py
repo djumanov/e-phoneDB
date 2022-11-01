@@ -1,30 +1,41 @@
-from datetime import date, datetime
+from datetime import datetime
 from django.views import View
 from django.http import HttpRequest, JsonResponse
 from .models import Company, Product
-import json
-from datetime import datetime
-from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def convert_to_dict(product: Product) -> dict:
-    company: Company = Company.objects.get(id=product.company_id)
-    product_dict = {
-        'id': product.id,
-        'name': product.name,
-        'color': product.color,
-        'ram': product.ram,
-        'memory': product.memory,
-        'price': product.price,
-        'image': product.image,
-        'released_date': product.released_date,
-        'created_at': product.created_at,
-        'updated_at': product.updated_at,
-        'company': company.name
-    }
+def product_convert_to_dict(product: Product) -> dict:
+    try:
+        company: Company = Company.objects.get(id=product.company_id)
+        product_dict = {
+            'id': product.id,
+            'name': product.name,
+            'color': product.color,
+            'ram': product.ram,
+            'memory': product.memory,
+            'price': product.price,
+            'image': product.image,
+            'released_date': product.released_date,
+            'created_at': product.created_at,
+            'updated_at': product.updated_at,
+            'company': company.name
+        }
 
-    return product_dict
+        return product_dict
+    except ObjectDoesNotExist:
+        return False
+
+
+def company_convert_to_dict(company: Company) -> dict:
+    company_dict = {
+        'id': company.id,
+        'logo': company.logo,
+        'description': company.description,
+        'website': company.website,
+    }
+    return company_dict
+
 
 
 
@@ -33,12 +44,7 @@ class CompaniesView(View):
         companies = Company.objects.all()
         companies_json = dict()
         for company in companies: 
-            companies_json[company.name] = {
-                'id': company.id,
-                'logo': company.logo,
-                'description': company.description,
-                'website': company.website,
-            }
+            companies_json[company.name] = company_convert_to_dict(company)
 
         return JsonResponse(data=companies_json)
 
@@ -62,7 +68,7 @@ class ProductsView(View):
         products = Product.objects.all()
         products_json = {'products': []}
         for product in products:
-            products_json['products'].append(convert_to_dict(product))
+            products_json['products'].append(product_convert_to_dict(product))
 
         return JsonResponse(data=products_json)
 
@@ -93,14 +99,7 @@ class GetCompanyByIdView(View):
     def get(self, request: HttpRequest, id: int) -> JsonResponse:
         try:
             company: Company = Company.objects.get(id=id)
-            company_json = {
-                'id': company.id,
-                'name': company.name,
-                'logo': company.logo,
-                'description': company.description,
-                'website': company.website
-            }
-            return JsonResponse({'company': company_json})
+            return JsonResponse({'company': company_convert_to_dict(company)})
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'bad'})
 
@@ -110,7 +109,7 @@ class GetProductByIdView(View):
     def get(self, request: HttpRequest, id: int) -> JsonResponse:
         try:
             product: Product = Product.objects.get(id=id)
-            return JsonResponse({'product': convert_to_dict(product)})
+            return JsonResponse({'product': product_convert_to_dict(product)})
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'bad'})
 
@@ -120,13 +119,7 @@ class DeleteCompanyView(View):
     def post(self, request: HttpRequest, id: int) -> JsonResponse:
         try:
             company: Company = Company.objects.get(id=id)
-            company_json = {
-                'id': company.id,
-                'name': company.name,
-                'logo': company.logo,
-                'description': company.description,
-                'website': company.website
-            }
+            company_json = company_convert_to_dict(company)
             company.delete()
             return JsonResponse({'deleted_company': company_json})
         except ObjectDoesNotExist:
@@ -138,7 +131,7 @@ class DeleteProductView(View):
     def post(self, request: HttpRequest, id: int) -> JsonResponse:
         try:
             product: Company = Product.objects.get(id=id)
-            product_json = convert_to_dict(product)
+            product_json = product_convert_to_dict(product)
             product.delete()
             return JsonResponse({'deleted_product': product_json})
         except ObjectDoesNotExist:
