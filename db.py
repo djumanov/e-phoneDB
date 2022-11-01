@@ -81,4 +81,17 @@ def get_company_by_name(name):
     r = requests.get(url=f'{base_url}company/name/{name}')
     print(r.json())
 
-get_company_by_name('Samsung')
+
+def get_product_by_name(name):
+    r = requests.get(url=f'{base_url}product/name/{name}')
+    print(r.json())
+
+
+def get_product_by_color(color):
+    r = requests.get(url=f'{base_url}product/color/{color}')
+    print(r.json())
+
+def get_product_by_ram(ram ):
+    r = requests.get(url=f'{base_url}product/ram/{ram}')
+    print(r.json())
+
