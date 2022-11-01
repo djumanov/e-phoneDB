@@ -1,9 +1,9 @@
-from datetime import date
+from datetime import date, datetime
 from django.views import View
 from django.http import HttpRequest, JsonResponse
 from .models import Company, Product
 import json
-from datetime import date, datetime
+from datetime import datetime
 from django.db.models import Q
 
 
@@ -51,7 +51,7 @@ class AddCompanyView(View):
             description = data.get('description'),
             website     = data.get('website'),
         )
-        
+
         return JsonResponse({'added_company': data})
 
 
@@ -68,21 +68,20 @@ class ProductsView(View):
 
 class CreateProductView(View):
     def post(self, request: HttpRequest) -> JsonResponse:
-        # try:
         data = request.POST
-        company: Company = Company.objects.get(Q(name=data.get('company')))
-        released_date_str = data.get('released_date')
-        released_year, released_month, released_day = str(released_date_str).split('-')
-        Product.objects.create(
-            name          = data.get('name'),
-            color         = data.get('color'),
-            ram           = data.get('ram'),
-            memory        = data.get('memory'),
-            price         = data.get('price'),
-            image         = data.get('image'),
-            released_date = date(int(released_year), int(released_month), int(released_day)),
-            company       = company
-        )
-        return JsonResponse({'added_product': data})
-        # except:
-        #     return JsonResponse({'status': 'bad'})
+        company: Company = Company.objects.filter(name=data.get('company'))
+        if company:
+            product = Product.objects.create(
+                name          = data.get('name'),
+                color         = data.get('color'),
+                ram           = int(data.get('ram')),
+                memory        = int(data.get('memory')),
+                price         = float(data.get('price')),
+                image         = data.get('image'),
+                released_date = datetime.strptime(str(data.get('released_date')), '%Y-%m-%d').date(),
+                company       = company[0]
+            )
+            product.save()
+            return JsonResponse({'added_product': data})
+
+        return JsonResponse({'status': 'bad'})
