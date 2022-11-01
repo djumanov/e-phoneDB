@@ -1,4 +1,3 @@
-import json
 from tinydb import TinyDB
 import requests
 import random
@@ -6,16 +5,11 @@ from datetime import date
 
 base_url = 'http://127.0.0.1:8000/api/'
 
-rams = [3, 4, 6, 8, 12]
-memories = [16, 32, 64, 128, 256, 512]
-
-day = list(range(1, 28))
-month = list(range(1, 12))
-year = list(range(2010, 2022))
-
 db = TinyDB('db.json')
-collections = db.tables()
+
+
 def add_companies():
+    collections = db.tables()
     for collection_name in collections:
         payload = {
             'name': collection_name,
@@ -28,7 +22,15 @@ def add_companies():
 
 
 def add_products():
+    collections = db.tables()
     for collection_name in collections:
+        rams = [3, 4, 6, 8, 12]
+        memories = [16, 32, 64, 128, 256, 512]
+
+        day = list(range(1, 28))
+        month = list(range(1, 12))
+        year = list(range(2010, 2022))
+
         table = db.table(name=collection_name)
         documents = table.all()
         for document in documents:
@@ -42,7 +44,6 @@ def add_products():
                 'released_date': str(date(day=random.choice(day), month=random.choice(month), year=random.choice(year))),
                 'company': document['company']
             }
-            # print(payload['released_date'])
             r = requests.post(url=base_url+'create_product/', data=payload)
             print(r.json())
 
@@ -66,4 +67,12 @@ def del_product(id=1):
     print(r.json())
 
 
-del_company(id=15)
+def update_company(id, company):
+    r = requests.post(url=f'{base_url}update_company/{id}', data=company)
+    print(r.json())
+
+
+def update_product(id, product):
+    r = requests.post(url=f'{base_url}update_product/{id}', data=product)
+    print(r.json())
+
