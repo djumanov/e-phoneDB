@@ -180,7 +180,17 @@ class UpdateProductView(View):
                 product.released_date = datetime.strptime(data.get('released_date'), '%Y-%m-%d').date()
             product.save()
             return JsonResponse({'updated_product': product_convert_to_dict(product)})
-            
+
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'bad'})
             
+
+        
+class GetCompanyByNameView(View):
+    def get(self, request: HttpRequest, name: str) -> JsonResponse:
+        try:
+            company: Company = Company.objects.get(name=name)
+            return JsonResponse({'company': company_convert_to_dict(company)})
+        
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 'bad'})

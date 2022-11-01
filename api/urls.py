@@ -10,11 +10,13 @@ from .views import (
     UpdateProductView,
     GetCompanyByIdView,
     GetProductByIdView,
+    GetCompanyByNameView,
 )
 
 urlpatterns = [
     path(route='companies/', view=CompaniesView.as_view(), name='companies'),
     path(route='company/<int:id>', view=GetCompanyByIdView.as_view(), name='get_company'),
+    path(route='company/name/<str:name>', view=GetCompanyByNameView.as_view(), name='get_company_by_name'),
     path(route='add_company/', view=AddCompanyView.as_view(), name='add_company'),
     path(route='products/', view=ProductsView.as_view(), name='products'),
     path(route='product/<int:id>', view=GetProductByIdView.as_view(), name='get_product'),
