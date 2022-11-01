@@ -1,4 +1,7 @@
+from curses.ascii import HT
 from datetime import datetime
+import json
+from django import http
 from django.views import View
 from django.http import HttpRequest, JsonResponse
 from .models import Company, Product
@@ -194,3 +197,34 @@ class GetCompanyByNameView(View):
         
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'bad'})
+
+
+
+class GetProductByNameView(View):
+    def get(self, request: HttpRequest, name: str) -> JsonResponse:
+        products: Product = Product.objects.filter(name=name).all()
+        product_json = {'products': []}
+        for product in products:
+            product_json['products'].append(product_convert_to_dict(product))
+
+        return JsonResponse({'product': product_json})
+
+
+class GetProductByColorView(View):
+    def get(self, request: HttpRequest, color: str) -> JsonResponse:
+        products: Product = Product.objects.filter(color=color).all()
+        product_json = {'products': []}
+        for product in products:
+            product_json['products'].append(product_convert_to_dict(product))
+
+        return JsonResponse({'product': product_json})
+
+
+class GetProductByRamView(View):
+    def get(self, request: HttpRequest, ram: int) -> JsonResponse:
+        products: Product = Product.objects.filter(ram=ram).all()
+        product_json = {'products': []}
+        for product in products:
+            product_json['products'].append(product_convert_to_dict(product))
+
+        return JsonResponse({'product': product_json})
