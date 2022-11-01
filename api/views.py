@@ -81,11 +81,11 @@ class CreateProductView(View):
             product = Product.objects.create(
                 name          = data.get('name'),
                 color         = data.get('color'),
-                ram           = int(data.get('ram')),
-                memory        = int(data.get('memory')),
-                price         = float(data.get('price')),
+                ram           = data.get('ram'),
+                memory        = data.get('memory'),
+                price         = data.get('price'),
                 image         = data.get('image'),
-                released_date = datetime.strptime(str(data.get('released_date')), '%Y-%m-%d').date(),
+                released_date = datetime.strptime(data.get('released_date'), '%Y-%m-%d').date(),
                 company       = company[0]
             )
             product.save()
@@ -136,3 +136,51 @@ class DeleteProductView(View):
             return JsonResponse({'deleted_product': product_json})
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'bad'})
+
+
+
+class UpdateCompanyView(View):
+    def post(self, request: HttpRequest, id: int) -> JsonResponse:
+        try:
+            company: Company = Company.objects.get(id=id)
+            data: dict = request.POST
+            if data.get('name'):
+                company.name = data.get('name')
+            if data.get('logo'):
+                company.logo = data.get('logo')
+            if data.get('description'):
+                company.description = data.get('description')
+            if data.get('website'):
+                company.website = data.get('website')
+            company.save()
+            return JsonResponse({'updated_company': company_convert_to_dict(company)})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 'bad'})
+
+
+class UpdateProductView(View):
+    def post(self, request: HttpRequest, id: int) -> JsonResponse:
+        try:
+            product: Product = Product.objects.get(id=id)
+            data: dict = request.POST
+            if data.get('name'):
+                product.name = data.get('name')
+            if data.get('color'):
+                product.color = data.get('color')
+            if data.get('ram'):
+                product.ram = data.get('ram')
+            if data.get('memory'):
+                product.memory = data.get('memory')
+            if data.get('price'):
+                product.price = data.get('price')
+            if data.get('image'):
+                product.image = data.get('image')
+            if data.get('released_date'):
+                product.released_date = datetime.strptime(data.get('released_date'), '%Y-%m-%d').date()
+            product.save()
+            return JsonResponse({'updated_product': product_convert_to_dict(product)})
+            
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 'bad'})
+            

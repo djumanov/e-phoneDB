@@ -6,6 +6,8 @@ from .views import (
     AddCompanyView,
     DeleteCompanyView,
     DeleteProductView,
+    UpdateCompanyView,
+    UpdateProductView,
     GetCompanyByIdView,
     GetProductByIdView,
 )
@@ -19,4 +21,6 @@ urlpatterns = [
     path(route='create_product/', view=CreateProductView.as_view(), name='create_product'),
     path(route='delete_company/<int:id>', view=DeleteCompanyView.as_view(), name='delete_company'),
     path(route='delete_product/<int:id>', view=DeleteProductView.as_view(), name='delete_product'),
+    path(route='update_company/<int:id>', view=UpdateCompanyView.as_view(), name='update_company'),
+    path(route='update_product/<int:id>', view=UpdateProductView.as_view(), name='update_product'),
 ]
