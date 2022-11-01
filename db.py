@@ -76,3 +76,9 @@ def update_product(id, product):
     r = requests.post(url=f'{base_url}update_product/{id}', data=product)
     print(r.json())
 
+
+def get_company_by_name(name):
+    r = requests.get(url=f'{base_url}company/name/{name}')
+    print(r.json())
+
+get_company_by_name('Samsung')
