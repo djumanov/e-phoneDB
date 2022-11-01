@@ -5,6 +5,7 @@ from .models import Company, Product
 import json
 from datetime import datetime
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def convert_to_dict(product: Product) -> dict:
@@ -85,3 +86,60 @@ class CreateProductView(View):
             return JsonResponse({'added_product': data})
 
         return JsonResponse({'status': 'bad'})
+
+
+
+class GetCompanyByIdView(View):
+    def get(self, request: HttpRequest, id: int) -> JsonResponse:
+        try:
+            company: Company = Company.objects.get(id=id)
+            company_json = {
+                'id': company.id,
+                'name': company.name,
+                'logo': company.logo,
+                'description': company.description,
+                'website': company.website
+            }
+            return JsonResponse({'company': company_json})
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 'bad'})
+
+
+
+class GetProductByIdView(View):
+    def get(self, request: HttpRequest, id: int) -> JsonResponse:
+        try:
+            product: Product = Product.objects.get(id=id)
+            return JsonResponse({'product': convert_to_dict(product)})
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 'bad'})
+
+
+
+class DeleteCompanyView(View):
+    def post(self, request: HttpRequest, id: int) -> JsonResponse:
+        try:
+            company: Company = Company.objects.get(id=id)
+            company_json = {
+                'id': company.id,
+                'name': company.name,
+                'logo': company.logo,
+                'description': company.description,
+                'website': company.website
+            }
+            company.delete()
+            return JsonResponse({'deleted_company': company_json})
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 'bad'})
+
+
+
+class DeleteProductView(View):
+    def post(self, request: HttpRequest, id: int) -> JsonResponse:
+        try:
+            product: Company = Product.objects.get(id=id)
+            product_json = convert_to_dict(product)
+            product.delete()
+            return JsonResponse({'deleted_product': product_json})
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 'bad'})
