@@ -9,3 +9,5 @@
 - [X] POST - `api/create_product/` -> add new product
 - [X] POST - `api/delete_company/<int:id>` -> delete old company
 - [X] POST - `api/delete_product/<int:id>` -> delete old product
+- [ ] POST - `api/update_company/<int:id>` -> update company
+- [ ] POST - `api/update_product/<int:id>` -> update product
