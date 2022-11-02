@@ -1,7 +1,4 @@
-from curses.ascii import HT
 from datetime import datetime
-import json
-from django import http
 from django.views import View
 from django.http import HttpRequest, JsonResponse
 from .models import Company, Product
@@ -24,8 +21,8 @@ def product_convert_to_dict(product: Product) -> dict:
             'updated_at': product.updated_at,
             'company': company.name
         }
-
         return product_dict
+
     except ObjectDoesNotExist:
         return False
 
@@ -103,6 +100,7 @@ class GetCompanyByIdView(View):
         try:
             company: Company = Company.objects.get(id=id)
             return JsonResponse({'company': company_convert_to_dict(company)})
+
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'bad'})
 
@@ -113,6 +111,7 @@ class GetProductByIdView(View):
         try:
             product: Product = Product.objects.get(id=id)
             return JsonResponse({'product': product_convert_to_dict(product)})
+
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'bad'})
 
@@ -125,6 +124,7 @@ class DeleteCompanyView(View):
             company_json = company_convert_to_dict(company)
             company.delete()
             return JsonResponse({'deleted_company': company_json})
+
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'bad'})
 
@@ -137,6 +137,7 @@ class DeleteProductView(View):
             product_json = product_convert_to_dict(product)
             product.delete()
             return JsonResponse({'deleted_product': product_json})
+
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'bad'})
 
@@ -202,7 +203,7 @@ class GetCompanyByNameView(View):
 
 class GetProductByNameView(View):
     def get(self, request: HttpRequest, name: str) -> JsonResponse:
-        products: Product = Product.objects.filter(name=name).all()
+        products = Product.objects.filter(name=name).all()
         product_json = {'products': []}
         for product in products:
             product_json['products'].append(product_convert_to_dict(product))
@@ -212,7 +213,7 @@ class GetProductByNameView(View):
 
 class GetProductByColorView(View):
     def get(self, request: HttpRequest, color: str) -> JsonResponse:
-        products: Product = Product.objects.filter(color=color).all()
+        products = Product.objects.filter(color=color).all()
         product_json = {'products': []}
         for product in products:
             product_json['products'].append(product_convert_to_dict(product))
@@ -222,9 +223,45 @@ class GetProductByColorView(View):
 
 class GetProductByRamView(View):
     def get(self, request: HttpRequest, ram: int) -> JsonResponse:
-        products: Product = Product.objects.filter(ram=ram).all()
+        products = Product.objects.filter(ram=ram).all()
         product_json = {'products': []}
         for product in products:
             product_json['products'].append(product_convert_to_dict(product))
 
         return JsonResponse({'product': product_json})
+
+
+class GetProductByMemoryView(View):
+    def get(self, request: HttpRequest, memory: int) -> JsonResponse:
+        products = Product.objects.filter(memory=memory).all()
+        product_json = {'products': []}
+        for product in products:
+            product_json['products'].append(product_convert_to_dict(product))
+
+        return JsonResponse({'product': product_json})
+
+
+class GetProductByPriceView(View):
+    def get(self, request: HttpRequest, price: str) -> JsonResponse:
+        products = Product.objects.filter(price=price).all()
+        product_json = {'products': []}
+        for product in products:
+            product_json['products'].append(product_convert_to_dict(product))
+
+        return JsonResponse({'product': product_json})
+
+
+
+class GetProductByCompanyView(View):
+    def get(self, request: HttpRequest, company: str) -> JsonResponse:
+        try:
+            company: Company = Company.objects.get(name=company)
+            products: list[Product] = Product.objects.filter(company=company)
+            products_json = {'products': []}
+            for product in products:
+                products_json['products'].append(product_convert_to_dict(product))
+
+            return JsonResponse({'products': products_json})
+        
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 'bad'})

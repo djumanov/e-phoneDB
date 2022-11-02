@@ -14,6 +14,9 @@ from .views import (
     GetProductByNameView,
     GetProductByColorView,
     GetProductByRamView,
+    GetProductByMemoryView,
+    GetProductByPriceView,
+    GetProductByCompanyView,
 )
 
 urlpatterns = [
@@ -26,6 +29,9 @@ urlpatterns = [
     path(route='product/name/<str:name>', view=GetProductByNameView.as_view(), name='get_product_by_name'),
     path(route='product/color/<str:color>', view=GetProductByColorView.as_view(), name='get_product_by_color'),
     path(route='product/ram/<int:ram>', view=GetProductByRamView.as_view(), name='get_product_by_ram'),
+    path(route='product/memory/<int:memory>', view=GetProductByMemoryView.as_view(), name='get_product_by_memory'),
+    path(route='product/price/<str:price>', view=GetProductByPriceView.as_view(), name='get_product_by_price'),
+    path(route='product/company/<str:company>', view=GetProductByCompanyView.as_view(), name='get_product_by_company'),
     path(route='create_product/', view=CreateProductView.as_view(), name='create_product'),
     path(route='delete_company/<int:id>', view=DeleteCompanyView.as_view(), name='delete_company'),
     path(route='delete_product/<int:id>', view=DeleteProductView.as_view(), name='delete_product'),
