@@ -91,7 +91,21 @@ def get_product_by_color(color):
     r = requests.get(url=f'{base_url}product/color/{color}')
     print(r.json())
 
-def get_product_by_ram(ram ):
+def get_product_by_ram(ram):
     r = requests.get(url=f'{base_url}product/ram/{ram}')
     print(r.json())
 
+def get_product_by_memory(memory):
+    r = requests.get(url=f'{base_url}product/memory/{memory}')
+    print(r.json())
+
+def get_product_by_price(price):
+    r = requests.get(url=f'{base_url}product/price/{price}')
+    print(r.json())
+
+
+def get_product_by_company(name):
+    r = requests.get(url=f'{base_url}product/company/{name}')
+    print(r.json())
+
+get_product_by_company('Apple')
