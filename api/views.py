@@ -208,7 +208,7 @@ class GetProductByNameView(View):
         for product in products:
             product_json['products'].append(product_convert_to_dict(product))
 
-        return JsonResponse({'product': product_json})
+        return JsonResponse(product_json)
 
 
 class GetProductByColorView(View):
@@ -218,7 +218,7 @@ class GetProductByColorView(View):
         for product in products:
             product_json['products'].append(product_convert_to_dict(product))
 
-        return JsonResponse({'product': product_json})
+        return JsonResponse(product_json)
 
 
 class GetProductByRamView(View):
@@ -228,7 +228,7 @@ class GetProductByRamView(View):
         for product in products:
             product_json['products'].append(product_convert_to_dict(product))
 
-        return JsonResponse({'product': product_json})
+        return JsonResponse(product_json)
 
 
 class GetProductByMemoryView(View):
@@ -238,7 +238,7 @@ class GetProductByMemoryView(View):
         for product in products:
             product_json['products'].append(product_convert_to_dict(product))
 
-        return JsonResponse({'product': product_json})
+        return JsonResponse(product_json)
 
 
 class GetProductByPriceView(View):
@@ -248,7 +248,7 @@ class GetProductByPriceView(View):
         for product in products:
             product_json['products'].append(product_convert_to_dict(product))
 
-        return JsonResponse({'product': product_json})
+        return JsonResponse(product_json)
 
 
 
@@ -259,5 +259,5 @@ class GetProductByCompanyView(View):
         for product in products:
             products_json['products'].append(product_convert_to_dict(product))
 
-        return JsonResponse({'products': products_json})
+        return JsonResponse(products_json)
         
