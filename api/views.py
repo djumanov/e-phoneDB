@@ -254,14 +254,10 @@ class GetProductByPriceView(View):
 
 class GetProductByCompanyView(View):
     def get(self, request: HttpRequest, company: str) -> JsonResponse:
-        try:
-            company: Company = Company.objects.get(name=company)
-            products: list[Product] = Product.objects.filter(company=company)
-            products_json = {'products': []}
-            for product in products:
-                products_json['products'].append(product_convert_to_dict(product))
+        products: list[Product] = Product.objects.filter(company__name=company)
+        products_json = {'products': []}
+        for product in products:
+            products_json['products'].append(product_convert_to_dict(product))
 
-            return JsonResponse({'products': products_json})
+        return JsonResponse({'products': products_json})
         
-        except ObjectDoesNotExist:
-            return JsonResponse({'status': 'bad'})
